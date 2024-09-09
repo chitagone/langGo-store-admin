@@ -59,24 +59,28 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
 
   const action = initialData ? "Save Changes" : "Create";
 
-  // update API Call
   const onSubmit = async (data: BillboardFormValue) => {
     try {
       setLoading(true);
+
       if (initialData) {
+        // Update existing billboard
         await axios.patch(
           `/api/${params.storeId}/billboards/${params.billboardId}`,
           data
         );
       } else {
+        // Create new billboard
         await axios.post(`/api/${params.storeId}/billboards`, data);
       }
+
       toast.success(toastMessage);
 
+      // Use `router.replace` to navigate to the target page and force a reload
+      router.replace(`/${params.storeId}/billboards`);
       router.refresh();
-      router.push(`/${params.storeId}/billboards`);
     } catch (error) {
-      toast.error("Someting went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -89,8 +93,9 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
       await axios.delete(
         `/api/${params.storeId}/billboards/${params.billboardId}`
       );
+      // Use `router.replace` to navigate to the target page and force a reload
+      router.replace(`/${params.storeId}/billboards`);
       router.refresh();
-      router.push("/");
       toast.success("Billboard deleted");
     } catch (error) {
       toast.error("Make Sure you remove all  categories using this billboard.");
