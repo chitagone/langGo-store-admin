@@ -21,6 +21,8 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { ApiAlert } from "@/components/ui/api-alert";
+import { useOrigin } from "@/hook/use-origin";
 interface SettingFormProps {
   initialData: Store;
 }
@@ -34,6 +36,7 @@ type SettingFormValue = z.infer<typeof formSchema>;
 export const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
+  const origin = useOrigin();
 
   const [open, setOpen] = useState(false);
 
@@ -122,6 +125,12 @@ export const SettingForm: React.FC<SettingFormProps> = ({ initialData }) => {
             Save Changes
           </Button>
         </form>
+        <Separator />
+        <ApiAlert
+          title="NEXT_PUBLIC_API_URL"
+          description={`${origin}/api/${params.storeId}`}
+          variant="public"
+        />
       </Form>
     </>
   );
