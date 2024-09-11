@@ -22,7 +22,7 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 
-import ImageUpload from "@/components/ui/image-upload";
+import BillboardImage from "@/components/ui/billborad-image";
 
 const formSchema = z.object({
   label: z.string().min(1),
@@ -140,7 +140,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
               <FormItem>
                 <FormLabel>Backgound Image</FormLabel>
                 <FormControl>
-                  <ImageUpload
+                  <BillboardImage
                     value={field.value ? [field.value] : []}
                     disabled={loading}
                     onChange={(url) => {

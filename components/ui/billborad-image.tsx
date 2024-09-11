@@ -12,7 +12,7 @@ interface ImageUploadProps {
   value: string[];
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({
+const BillboardImage: React.FC<ImageUploadProps> = ({
   disabled,
   onChange,
   onRemove,
@@ -64,7 +64,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget onUpload={onUpload} uploadPreset="gofmado">
+      <CldUploadWidget
+        onUpload={onUpload}
+        uploadPreset="gofmado"
+        onSuccess={(result) => onChange(result.info.secure_url)}
+      >
         {({ open }) => {
           const onClick = () => {
             open();
@@ -86,4 +90,4 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   );
 };
 
-export default ImageUpload;
+export default BillboardImage;
