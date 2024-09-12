@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-
+import Image from "next/image";
 // Update the type to include the image field
 export type ProductColumn = {
   id: string;
@@ -20,7 +20,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "image",
     header: "Image",
     cell: ({ row }) => (
-      <img
+      <Image
         src={row.original.image}
         alt={row.original.name}
         className="h-12 w-12 object-cover rounded"
