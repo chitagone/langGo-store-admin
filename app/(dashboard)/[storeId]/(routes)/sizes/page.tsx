@@ -2,7 +2,12 @@ import prismadb from "@/lib/prismadb";
 import { SizesClient } from "./components/client";
 import { SizesColumn } from "./components/columns";
 import { format } from "date-fns";
-
+interface Item {
+  id: string;
+  name: string;
+  value: string;
+  createdAt: string;
+}
 const SizesPage = async ({ params }: { params: { storeId: string } }) => {
   const sizes = await prismadb.size.findMany({
     where: {
@@ -12,7 +17,7 @@ const SizesPage = async ({ params }: { params: { storeId: string } }) => {
       createdAt: "desc",
     },
   });
-  const formattedSizes: SizesColumn[] = sizes.map((item) => ({
+  const formattedSizes: SizesColumn[] = sizes.map((item: Item) => ({
     id: item.id,
     name: item.name,
     value: item.value,
