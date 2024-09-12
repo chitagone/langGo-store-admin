@@ -3,12 +3,6 @@ import { BillboardClient } from "./components/client";
 import { BillboardColumn } from "./components/columns";
 import { format } from "date-fns";
 
-interface Item {
-  id: string;
-  label: string;
-  createdAt: string; // Assuming `createdAt` is a formatted date string
-}
-
 const BillboardsPage = async ({ params }: { params: { storeId: string } }) => {
   const billboards = await prismadb.billboard.findMany({
     where: {

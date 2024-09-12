@@ -3,6 +3,14 @@ import { CategoryClient } from "./components/client";
 import { CategoryColumn } from "./components/columns";
 import { format } from "date-fns";
 
+interface Item {
+  id: string;
+  name: string;
+  createdAt: string;
+  billboard: {
+    label: string;
+  };
+}
 const CategoriesPage = async ({ params }: { params: { storeId: string } }) => {
   const categories = await prismadb.category.findMany({
     where: {
@@ -15,12 +23,14 @@ const CategoriesPage = async ({ params }: { params: { storeId: string } }) => {
       createdAt: "desc",
     },
   });
-  const formattedCategories: CategoryColumn[] = categories.map((item) => ({
-    id: item.id,
-    name: item.name,
-    billboardLabel: item.billboard.label,
-    createAt: format(item.createdAt, "MMMM do, yyyy"),
-  }));
+  const formattedCategories: CategoryColumn[] = categories.map(
+    (item: Item) => ({
+      id: item.id,
+      name: item.name,
+      billboardLabel: item.billboard.label,
+      createAt: format(item.createdAt, "MMMM do, yyyy"),
+    })
+  );
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6 ">
