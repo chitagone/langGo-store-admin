@@ -2,7 +2,7 @@ import prismadb from "@/lib/prismadb";
 import { ProductClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
 import { format } from "date-fns";
-import { formatter } from "@/lib/utils";
+import { formatToKip } from "@/lib/utils";
 
 const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
   const products = await prismadb.product.findMany({
@@ -25,7 +25,7 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     image: item.images.length > 0 ? item.images[0].url : "",
-    price: formatter.format(item.price.toNumber()),
+    price: formatToKip(item.price.toNumber()),
     category: item.category.name,
     size: item.size.name,
     color: item.color.value,
