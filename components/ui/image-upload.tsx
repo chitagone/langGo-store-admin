@@ -11,7 +11,14 @@ interface ImageUploadProps {
   onRemove: (value: string) => void;
   value: string[];
 }
+interface CloudinaryUploadInfo {
+  secure_url: string;
+  public_id: string;
+}
 
+interface CloudinaryUploadResult {
+  info: CloudinaryUploadInfo;
+}
 const ImageUpload: React.FC<ImageUploadProps> = ({
   disabled,
   onChange,
@@ -24,7 +31,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     setIsMounted(true);
   }, []);
 
-  const onUpload = (result: any) => {
+  const onUpload = (result: CloudinaryUploadResult) => {
     // Log the entire result object
     console.log("Upload Result:", result);
 

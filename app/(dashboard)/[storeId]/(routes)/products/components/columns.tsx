@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import Image from "next/image";
+
 // Update the type to include the image field
 export type ProductColumn = {
   id: string;
@@ -21,9 +22,11 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Image",
     cell: ({ row }) => (
       <Image
-        src={row.original.image}
-        alt={row.original.name}
-        className="h-12 w-12 object-cover rounded"
+        src={row.original?.image}
+        alt={row.original?.name}
+        width={50} // Fixed width
+        height={50} // Fixed height
+        className="object-cover rounded aspect-square"
       />
     ),
   },

@@ -1,9 +1,12 @@
 "use client";
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-
+interface GraphData {
+  name: string;
+  total: number;
+}
 interface OverViewProps {
-  data: any[];
+  data: GraphData[];
 }
 
 export const OverView: React.FC<OverViewProps> = ({ data }) => {

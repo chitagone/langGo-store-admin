@@ -24,20 +24,6 @@ const BillboardImage: React.FC<ImageUploadProps> = ({
     setIsMounted(true);
   }, []);
 
-  const onUpload = (result: any) => {
-    // Log the entire result object
-    console.log("Upload Result:", result);
-
-    // Log specific details if needed
-    if (result.info) {
-      console.log("Secure URL:", result.info.secure_url);
-      console.log("Image Public ID:", result.info.public_id);
-    }
-
-    // Pass the URL to the parent component
-    onChange(result.info.secure_url);
-  };
-
   if (!isMounted) {
     return null;
   }
@@ -65,7 +51,6 @@ const BillboardImage: React.FC<ImageUploadProps> = ({
         ))}
       </div>
       <CldUploadWidget
-        onUpload={onUpload}
         uploadPreset="gofmado"
         onSuccess={(result) => onChange(result.info.secure_url)}
       >
