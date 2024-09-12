@@ -2,7 +2,6 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/strip";
-
 import prismadb from "@/lib/prismadb";
 
 export async function POST(req: Request) {
@@ -11,15 +10,18 @@ export async function POST(req: Request) {
   const signature = headers().get("Stripe-Signature") as string;
   let event: Stripe.Event;
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (error) {
-    return new NextResponse(`WEbhook Error:${error}`, { status: 400 });
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!webhookSecret) {
+    return new NextResponse("Webhook secret is not defined", { status: 500 });
   }
+
+  try {
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+  } catch (error) {
+    return new NextResponse(`Webhook Error: ${error}`, { status: 400 });
+  }
+
   const session = event.data.object as Stripe.Checkout.Session;
   const address = session?.customer_details?.address;
 
@@ -49,7 +51,9 @@ export async function POST(req: Request) {
       },
     });
 
-    const productIds = order.orderItems.map((orderItem) => orderItem.productId);
+    const productIds = order.orderItems.map(
+      (orderItem: any) => orderItem.productId
+    );
     await prismadb.product.updateMany({
       where: {
         id: {
