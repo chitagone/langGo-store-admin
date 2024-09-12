@@ -19,10 +19,10 @@ const BillboardsPage = async ({ params }: { params: { storeId: string } }) => {
     },
   });
   const formattedBillboards: BillboardColumn[] = billboards.map(
-    (item: Item) => ({
+    (item: BillboardColumn) => ({
       id: item.id,
       label: item.label,
-      createAt: format(item.createdAt, "MMMM do, yyyy"),
+      createAt: format(item.createAt, "MMMM do, yyyy"),
     })
   );
   return (
