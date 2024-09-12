@@ -4,6 +4,7 @@ import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -28,6 +29,17 @@ const BillboardImage: React.FC<ImageUploadProps> = ({
     return null;
   }
 
+  const handleSuccess = (result: CloudinaryUploadWidgetResults) => {
+    // Type guard to check if `result.info` is an object with `secure_url`
+    if (typeof result.info !== "string" && result.info?.secure_url) {
+      onChange(result.info.secure_url);
+    } else {
+      console.error(
+        "Upload failed: secure_url is undefined or result.info is not an object"
+      );
+    }
+  };
+
   return (
     <div>
       <div className="mb-4 flex items-center gap-4">
@@ -50,10 +62,7 @@ const BillboardImage: React.FC<ImageUploadProps> = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget
-        uploadPreset="gofmado"
-        onSuccess={(result) => onChange(result.info.secure_url)}
-      >
+      <CldUploadWidget uploadPreset="gofmado" onSuccess={handleSuccess}>
         {({ open }) => {
           const onClick = () => {
             open();
