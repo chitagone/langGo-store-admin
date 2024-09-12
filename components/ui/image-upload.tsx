@@ -4,6 +4,7 @@ import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -11,14 +12,7 @@ interface ImageUploadProps {
   onRemove: (value: string) => void;
   value: string[];
 }
-interface CloudinaryUploadInfo {
-  secure_url: string;
-  public_id: string;
-}
 
-interface CloudinaryUploadResult {
-  info: CloudinaryUploadInfo;
-}
 const ImageUpload: React.FC<ImageUploadProps> = ({
   disabled,
   onChange,
@@ -31,23 +25,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     setIsMounted(true);
   }, []);
 
-  const onUpload = (result: CloudinaryUploadResult) => {
-    // Log the entire result object
-    console.log("Upload Result:", result);
-
-    // Log specific details if needed
-    if (result.info) {
-      console.log("Secure URL:", result.info.secure_url);
-      console.log("Image Public ID:", result.info.public_id);
-    }
-
-    // Pass the URL to the parent component
-    onChange(result.info.secure_url);
-  };
-
   if (!isMounted) {
     return null;
   }
+
+  const handleSuccess = (result: CloudinaryUploadWidgetResults) => {
+    // Type guard to check if `result.info` is an object with `secure_url`
+    if (typeof result.info !== "string" && result.info?.secure_url) {
+      onChange(result.info.secure_url);
+    } else {
+      console.error(
+        "Upload failed: secure_url is undefined or result.info is not an object"
+      );
+    }
+  };
 
   return (
     <div>
@@ -71,7 +62,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         ))}
       </div>
-      <CldUploadWidget onUpload={onUpload} uploadPreset="gofmado">
+      <CldUploadWidget uploadPreset="gofmado" onSuccess={handleSuccess}>
         {({ open }) => {
           const onClick = () => {
             open();
