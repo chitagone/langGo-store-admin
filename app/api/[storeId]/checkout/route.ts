@@ -4,6 +4,12 @@ import { NextResponse } from "next/server";
 import { stripe } from "@/lib/strip"; // Assuming "strip" is correct, otherwise should be "stripe"
 
 import prismadb from "@/lib/prismadb";
+interface Product {
+  name: string;
+  price: {
+    toNumber: () => number;
+  };
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,7 +40,7 @@ export async function POST(
     });
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] =
-      products.map((product) => ({
+      products.map((product: Product) => ({
         quantity: 1,
         price_data: {
           currency: "USD",
