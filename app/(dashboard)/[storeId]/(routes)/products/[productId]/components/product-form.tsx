@@ -37,7 +37,8 @@ import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   name: z.string().min(1),
   details: z.string().min(1),
-  images: z.object({ url: z.string() }).array(),
+  images: z.string().array(),
+
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
   colorId: z.string().min(1),
@@ -72,17 +73,19 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<ProductFormValue>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
           ...initialData,
+          // Map the images from an array of objects to an array of strings (URLs)
+          images: initialData.images.map((image) => image.url),
           price: parseFloat(String(initialData?.price)),
         }
       : {
           name: "",
           details: "",
-          images: [],
+          images: [], // Initialize images as an empty array of strings
           price: 0,
           categoryId: "",
           colorId: "",
@@ -91,7 +94,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           isArchived: false,
         },
   });
-
+  const { getValues, setValue } = form;
   const title = initialData ? "Edit Product" : "Create Product";
   const description = initialData ? "Edit a Product" : "Add a new Product";
   const toastMessage = initialData ? "Product updated" : "Product created.";
@@ -103,13 +106,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       setLoading(true);
 
       if (initialData) {
-        // Update existing Product
         await axios.patch(
           `/api/${params.storeId}/products/${params.productId}`,
           data
         );
       } else {
-        // Create new billboard
         await axios.post(`/api/${params.storeId}/products`, data);
       }
 
@@ -178,14 +179,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <FormLabel>Image</FormLabel>
                 <FormControl>
                   <ImageUpload
-                    value={field.value.map((image) => image.url)}
+                    value={field.value.map((image) => image)}
                     disabled={loading}
-                    onChange={(url) =>
-                      field.onChange([...field.value, { url }])
-                    }
+                    onChange={(url) => {
+                      setValue("images", [...getValues("images"), url]);
+                    }}
                     onRemove={(urlToRemove) =>
                       field.onChange(
-                        field.value.filter((image) => image.url !== urlToRemove)
+                        field.value.filter((image) => image !== urlToRemove)
                       )
                     }
                   />

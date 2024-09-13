@@ -64,7 +64,6 @@ export async function POST(
         status: 403,
       });
     }
-
     const products = await prismadb.product.create({
       data: {
         name,
@@ -78,8 +77,8 @@ export async function POST(
         storeId: params.storeId,
         images: {
           createMany: {
-            data: images.map((image: { url: string }) => ({
-              url: image.url,
+            data: images.map((url: string) => ({
+              url, // Directly using the string as the URL
             })),
           },
         },
