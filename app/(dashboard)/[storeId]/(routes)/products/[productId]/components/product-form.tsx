@@ -32,9 +32,11 @@ import { AlertModal } from "@/components/modals/alert-modal";
 
 import ImageUpload from "@/components/ui/image-upload";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(1),
+  details: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
@@ -79,6 +81,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         }
       : {
           name: "",
+          details: "",
           images: [],
           price: 0,
           categoryId: "",
@@ -366,6 +369,23 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       This Product will not appear anywhere in the store
                     </FormDescription>
                   </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="details"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Details</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      disabled={loading}
+                      placeholder="Enter details here..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
