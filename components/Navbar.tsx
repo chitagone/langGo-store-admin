@@ -22,7 +22,7 @@ const Navbar = async () => {
       <div className="flex h-16 items-center px-4">
         <StoreSwithcher items={store} />
 
-        <MainNav className="mx-6" />
+        <MainNav className="mx-6 lg:w-full w-48" />
         <div className="ml-auto flex items-center space-x-4">
           <ModeToggle />
           <UserButton afterSignOutUrl="/" />
