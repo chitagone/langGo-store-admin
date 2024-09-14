@@ -101,10 +101,9 @@ export async function PATCH(
         isFeatured,
         isArchived,
         images: {
-          deleteMany: {}, // Delete all existing images
           createMany: {
-            data: images.map((img: { url: string }) => ({
-              url: img.url,
+            data: images.map((url: string) => ({
+              url, // Directly using the string as the URL
             })),
           },
         },
